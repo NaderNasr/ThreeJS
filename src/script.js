@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
-
+import './styles.css'
+import * as THREE from 'three'
 // Scene
 const scene = new THREE.Scene();
 // Camera
