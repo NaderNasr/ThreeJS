@@ -14,19 +14,55 @@ const geometry = new THREE.BoxGeometry(1, 1, 1);
 
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
-const mesh = new THREE.Mesh(geometry, material);
+// const mesh = new THREE.Mesh(geometry, material);
 
 const canvas = document.querySelector('.webgl');
-console.log(camera);
+
+const axisHelper = new THREE.AxesHelper(3)
+
 const renderer = new THREE.WebGLRenderer({
   canvas
 });
-camera.position.z = 3;
-// camera.position.x = 1;
-// camera.position.y = 1;
 
+const group = new THREE.Group()
+const cube1 = new THREE.Mesh(
+  new THREE.BoxGeometry(1, 1, 1),
+  new THREE.MeshBasicMaterial(material)
+)
+group.add(cube1)
+
+const cube2 = new THREE.Mesh(
+  new THREE.BoxGeometry(1, 1, 1),
+  new THREE.MeshBasicMaterial(material)
+)
+
+cube2.position.x = -2
+
+group.add(cube2)
+
+const cube3 = new THREE.Mesh(
+  new THREE.BoxGeometry(1, 1, 1),
+  new THREE.MeshBasicMaterial(material)
+)
+
+cube3.position.x = 2
+
+group.add(cube3)
+group.position.y = 1
+camera.position.z = 3
+
+// mesh.scale.set(1, 1, 1)
+// mesh.position.set(0.7, -0.6, 0.3)
+// mesh.rotation.reorder('YXZ')
+// mesh.rotation.x = Math.PI * 0.25
+// mesh.rotation.y = Math.PI * 0.25
+// camera.lookAt(mesh.position)
+
+scene.add(axisHelper)
 scene.add(camera);
-scene.add(mesh);
+scene.add(group)
+
+// scene.add(mesh);
 
 renderer.setSize(sizes.width, sizes.height);
 renderer.render(scene, camera);
