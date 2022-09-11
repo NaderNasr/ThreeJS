@@ -1,6 +1,7 @@
 import './styles.css'
 import * as THREE from 'three'
 import gsap from 'gsap';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 // Scene
 const scene = new THREE.Scene();
 // Camera
@@ -10,7 +11,10 @@ const sizes = {
   height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
 };
 
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
+const aspectRatio = sizes.width / sizes.height
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1, 1 * aspectRatio, -1, 0.1, 100);
+
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -46,11 +50,32 @@ const cube3 = new THREE.Mesh(
   new THREE.MeshBasicMaterial(material)
 )
 
+const clock = new THREE.Clock()
+
+// Cursor
+
+const cursor = {
+  x: 0,
+  y: 0
+}
+
+// Orbit Controls
+
+const orbitControls = new OrbitControls(camera, canvas)
+orbitControls.enableDamping = true
+
+window.addEventListener('mousemove', (event) => {
+  cursor.x = -(event.clientX / sizes.width - 0.5)
+  cursor.y = (event.clientY / sizes.height - 0.5)
+
+  console.log('cursor.x', cursor.x, 'cursor.y', cursor.y)
+})
+
 cube3.position.x = 2
 
 // group.add(cube3)
 group.position.y = 0
-camera.position.z = 3
+camera.position.set(0, 0, 3)
 
 // mesh.scale.set(1, 1, 1)
 // mesh.position.set(0.7, -0.6, 0.3)
@@ -68,12 +93,11 @@ scene.add(group)
 renderer.setSize(sizes.width, sizes.height);
 
 
-const clock = new THREE.Clock()
 
 // let time = Date.now();
 
-gsap.to(cube1.position, { duration: 1, x: 2, delay: 1 })
-gsap.to(cube1.position, { duration: 2, x: 0, delay: 2 })
+// gsap.to(cube1.position, { duration: 1, x: 2, delay: 1 })
+// gsap.to(cube1.position, { duration: 2, x: 0, delay: 2 })
 
 
 const anim = () => {
@@ -81,13 +105,17 @@ const anim = () => {
   // const currentTime = Date.now();
   // const deltaTime = currentTime - time;
   // time = currentTime
-  const timeElapsed = clock.getElapsedTime();
+  // const timeElapsed = clock.getElapsedTime();
   // console.log(timeElapsed)
-  cube1.rotation.y = Math.sin(timeElapsed)
+  // cube1.rotation.y = Math.sin(timeElapsed)
   // cube1.position.x = Math.cos(timeElapsed)
   // cube1.rotation.z = Math.sqrt(timeElapsed)
+  // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
+  // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
+  // camera.position.y = Math.cos(cursor.y * Math.PI * 2) * 3
 
-  camera.lookAt(cube1.position)
+  orbitControls.update()
+  // camera.lookAt(cube1.position)
 
 
   // request animation per frame rate
