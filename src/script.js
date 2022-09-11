@@ -1,5 +1,6 @@
 import './styles.css'
 import * as THREE from 'three'
+import gsap from 'gsap';
 // Scene
 const scene = new THREE.Scene();
 // Camera
@@ -38,7 +39,7 @@ const cube2 = new THREE.Mesh(
 
 cube2.position.x = -2
 
-group.add(cube2)
+// group.add(cube2)
 
 const cube3 = new THREE.Mesh(
   new THREE.BoxGeometry(1, 1, 1),
@@ -47,8 +48,8 @@ const cube3 = new THREE.Mesh(
 
 cube3.position.x = 2
 
-group.add(cube3)
-group.position.y = 1
+// group.add(cube3)
+group.position.y = 0
 camera.position.z = 3
 
 // mesh.scale.set(1, 1, 1)
@@ -65,4 +66,34 @@ scene.add(group)
 // scene.add(mesh);
 
 renderer.setSize(sizes.width, sizes.height);
-renderer.render(scene, camera);
+
+
+const clock = new THREE.Clock()
+
+// let time = Date.now();
+
+gsap.to(cube1.position, { duration: 1, x: 2, delay: 1 })
+gsap.to(cube1.position, { duration: 2, x: 0, delay: 2 })
+
+
+const anim = () => {
+  // animation based on real time and NOT framerate
+  // const currentTime = Date.now();
+  // const deltaTime = currentTime - time;
+  // time = currentTime
+  const timeElapsed = clock.getElapsedTime();
+  // console.log(timeElapsed)
+  cube1.rotation.y = Math.sin(timeElapsed)
+  // cube1.position.x = Math.cos(timeElapsed)
+  // cube1.rotation.z = Math.sqrt(timeElapsed)
+
+  camera.lookAt(cube1.position)
+
+
+  // request animation per frame rate
+  renderer.render(scene, camera);
+
+  window.requestAnimationFrame(anim)
+}
+
+anim()
