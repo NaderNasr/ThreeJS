@@ -11,6 +11,38 @@ const sizes = {
   height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
 };
 
+window.addEventListener('resize', (e) => {
+  sizes.width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+    sizes.height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+
+  camera.aspect = sizes.width / sizes.height
+  camera.updateProjectionMatrix()
+  renderer.setSize(sizes.width, sizes.height)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+})
+
+window.addEventListener('dblclick', () => {
+  const fullscreen = document.fullscreenElement || document.webkitFullscreenElement
+
+  if (!fullscreen) {
+    if (canvas.requestFullscreen) {
+      canvas.requestFullscreen()
+    } else if (canvas.webkitFullscreenElement) {
+      canvas.webkitRequestFullscreen()
+    }
+    // console.log('go fullscreen')
+  } else {
+    if(document.exitFullscreen){
+      document.exitFullscreen()
+    } else if(document.webkitExitFullscreen) {
+      document.webkitExitFullscreen()
+    }
+    // console.log('leave fullscreen')
+
+  }
+})
+
 const aspectRatio = sizes.width / sizes.height
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
 // const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1, 1 * aspectRatio, -1, 0.1, 100);
@@ -28,6 +60,7 @@ const axisHelper = new THREE.AxesHelper(3)
 const renderer = new THREE.WebGLRenderer({
   canvas
 });
+
 
 const group = new THREE.Group()
 const cube1 = new THREE.Mesh(
@@ -64,11 +97,12 @@ const cursor = {
 const orbitControls = new OrbitControls(camera, canvas)
 orbitControls.enableDamping = true
 
+
 window.addEventListener('mousemove', (event) => {
   cursor.x = -(event.clientX / sizes.width - 0.5)
   cursor.y = (event.clientY / sizes.height - 0.5)
 
-  console.log('cursor.x', cursor.x, 'cursor.y', cursor.y)
+  // console.log('cursor.x', cursor.x, 'cursor.y', cursor.y)
 })
 
 cube3.position.x = 2
