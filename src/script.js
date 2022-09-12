@@ -85,12 +85,12 @@ const renderer = new THREE.WebGLRenderer({
 
 
 // const group = new THREE.Group()
-const cube1 = new THREE.Mesh(
+const cube = new THREE.Mesh(
   geometry,
   material
 )
 
-// group.add(cube1)
+// group.add(cube)
 
 // const cube2 = new THREE.Mesh(
 //   new THREE.BoxGeometry(1, 1, 1),
@@ -142,12 +142,12 @@ camera.position.set(0, 0, 3)
 
 // scene.add(axisHelper)
 scene.add(camera);
-scene.add(cube1)
-console.log(cube1)
-// Debug
-// Debug
-// //
+scene.add(cube)
 
+// **** //
+// Debug
+// **** //
+console.log(cube)
 const gui = new GUI({ width: 400 });
 // hide GUI dashboard
 window.addEventListener('keydown', (event) => {
@@ -162,27 +162,41 @@ window.addEventListener('keydown', (event) => {
 
 const parameters = {
   spin: () => {
-    gsap.to(cube1.rotation, { y: cube1.rotation.y + 10, duration: 1 })
+    gsap.to(cube.rotation, { y: cube.rotation.y + 10, duration: 1 })
   }
 }
 
 gui
-  .add(cube1.position, 'y')
+  .add(cube.position, 'y')
   .step(0.01)
   .min(-3)
   .max(3)
-  .name('Cube Y')
+  .name('Up/Down')
+
+  gui
+  .add(cube.position, 'x')
+  .step(0.01)
+  .min(-3)
+  .max(3)
+  .name('Left/Right')
+
+  gui
+  .add(cube.position, 'z')
+  .step(0.01)
+  .min(-3)
+  .max(3)
+  .name('In/Out')
 
 gui
-  .add(cube1, 'visible')
+  .add(cube, 'visible')
   .name('Visible')
 
 gui
-  .add(cube1.material, 'wireframe')
+  .add(cube.material, 'wireframe')
   .name('Wireframe')
 
 gui
-  .addColor(cube1.material, 'color')
+  .addColor(cube.material, 'color')
   .name('Color')
 
 gui
@@ -195,8 +209,8 @@ renderer.setSize(sizes.width, sizes.height);
 
 // let time = Date.now();
 
-// gsap.to(cube1.position, { duration: 1, x: 2, delay: 1 })
-// gsap.to(cube1.position, { duration: 2, x: 0, delay: 2 })
+// gsap.to(cube.position, { duration: 1, x: 2, delay: 1 })
+// gsap.to(cube.position, { duration: 2, x: 0, delay: 2 })
 
 
 const anim = () => {
@@ -206,15 +220,15 @@ const anim = () => {
   // time = currentTime
   // const timeElapsed = clock.getElapsedTime();
   // console.log(timeElapsed)
-  // cube1.rotation.y = Math.sin(timeElapsed)
-  // cube1.position.x = Math.cos(timeElapsed)
-  // cube1.rotation.z = Math.sqrt(timeElapsed)
+  // cube.rotation.y = Math.sin(timeElapsed)
+  // cube.position.x = Math.cos(timeElapsed)
+  // cube.rotation.z = Math.sqrt(timeElapsed)
   // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
   // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
   // camera.position.y = Math.cos(cursor.y * Math.PI * 2) * 3
 
   orbitControls.update()
-  // camera.lookAt(cube1.position)
+  // camera.lookAt(cube.position)
 
 
   // request animation per frame rate
