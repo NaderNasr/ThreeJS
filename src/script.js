@@ -1,7 +1,12 @@
 import './styles.css'
 import * as THREE from 'three'
 import gsap from 'gsap';
+import GUI from 'lil-gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
+
+
+
 // Scene
 const scene = new THREE.Scene();
 // Camera
@@ -33,9 +38,9 @@ window.addEventListener('dblclick', () => {
     }
     // console.log('go fullscreen')
   } else {
-    if(document.exitFullscreen){
+    if (document.exitFullscreen) {
       document.exitFullscreen()
-    } else if(document.webkitExitFullscreen) {
+    } else if (document.webkitExitFullscreen) {
       document.webkitExitFullscreen()
     }
     // console.log('leave fullscreen')
@@ -47,41 +52,57 @@ const aspectRatio = sizes.width / sizes.height
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
 // const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1, 1 * aspectRatio, -1, 0.1, 100);
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const geometry = new THREE.BoxGeometry()
+
+// const count = 50
+// const positionsArray = new Float32Array(count * 3 * 3)
+
+// for (let i = 0; i < count * 3 * 3; i++) {
+//   positionsArray[i] = Math.random() - 0.5
+// }
+
+// const positionsAttr = new THREE.BufferAttribute(positionsArray, 3)
+// geometry.setAttribute('position', positionsAttr)
+
+
+const material = new THREE.MeshBasicMaterial({
+  color: 0x00ff00,
+  wireframe: true
+});
+
+
 
 // const mesh = new THREE.Mesh(geometry, material);
 
 const canvas = document.querySelector('.webgl');
 
-const axisHelper = new THREE.AxesHelper(3)
+// const axisHelper = new THREE.AxesHelper(3)
 
 const renderer = new THREE.WebGLRenderer({
   canvas
 });
 
 
-const group = new THREE.Group()
+// const group = new THREE.Group()
 const cube1 = new THREE.Mesh(
-  new THREE.BoxGeometry(1, 1, 1),
-  new THREE.MeshBasicMaterial(material)
-)
-group.add(cube1)
-
-const cube2 = new THREE.Mesh(
-  new THREE.BoxGeometry(1, 1, 1),
-  new THREE.MeshBasicMaterial(material)
+  geometry,
+  material
 )
 
-cube2.position.x = -2
+// group.add(cube1)
+
+// const cube2 = new THREE.Mesh(
+//   new THREE.BoxGeometry(1, 1, 1),
+//   new THREE.MeshBasicMaterial(material)
+// )
 
 // group.add(cube2)
 
-const cube3 = new THREE.Mesh(
-  new THREE.BoxGeometry(1, 1, 1),
-  new THREE.MeshBasicMaterial(material)
-)
+// const cube3 = new THREE.Mesh(
+//   new THREE.BoxGeometry(1, 1, 1),
+//   new THREE.MeshBasicMaterial(material)
+// )
 
 const clock = new THREE.Clock()
 
@@ -91,6 +112,7 @@ const cursor = {
   x: 0,
   y: 0
 }
+
 
 // Orbit Controls
 
@@ -105,10 +127,10 @@ window.addEventListener('mousemove', (event) => {
   // console.log('cursor.x', cursor.x, 'cursor.y', cursor.y)
 })
 
-cube3.position.x = 2
+// cube3.position.x = 2
 
 // group.add(cube3)
-group.position.y = 0
+// group.position.y = 0
 camera.position.set(0, 0, 3)
 
 // mesh.scale.set(1, 1, 1)
@@ -118,10 +140,53 @@ camera.position.set(0, 0, 3)
 // mesh.rotation.y = Math.PI * 0.25
 // camera.lookAt(mesh.position)
 
-scene.add(axisHelper)
+// scene.add(axisHelper)
 scene.add(camera);
-scene.add(group)
+scene.add(cube1)
+console.log(cube1)
+// Debug
+// Debug
+// //
 
+const gui = new GUI({ width: 400 });
+// hide GUI dashboard
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'h') {
+    if (gui._hidden) {
+      gui.show()
+    } else {
+      gui.hide()
+    }
+  }
+})
+
+const parameters = {
+  spin: () => {
+    gsap.to(cube1.rotation, { y: cube1.rotation.y + 10, duration: 1 })
+  }
+}
+
+gui
+  .add(cube1.position, 'y')
+  .step(0.01)
+  .min(-3)
+  .max(3)
+  .name('Cube Y')
+
+gui
+  .add(cube1, 'visible')
+  .name('Visible')
+
+gui
+  .add(cube1.material, 'wireframe')
+  .name('Wireframe')
+
+gui
+  .addColor(cube1.material, 'color')
+  .name('Color')
+
+gui
+  .add(parameters, 'spin')
 // scene.add(mesh);
 
 renderer.setSize(sizes.width, sizes.height);
