@@ -4,6 +4,15 @@ import gsap from 'gsap';
 import GUI from 'lil-gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
+import color from './textures/minecraft.png'
+import alpha from './textures/door/alpha.jpg'
+import height from './textures/door/height.jpg'
+import metalness from './textures/door/metalness.jpg'
+import normal from './textures/door/normal.jpg'
+import roughness from './textures/door/roughness.jpg'
+import ambientOcclusion from './textures/door/ambientOcclusion.jpg'
+
+
 
 
 
@@ -50,70 +59,73 @@ window.addEventListener('dblclick', () => {
 
 const aspectRatio = sizes.width / sizes.height
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1, 1 * aspectRatio, -1, 0.1, 100);
-
 
 const geometry = new THREE.BoxGeometry()
 
-// const count = 50
-// const positionsArray = new Float32Array(count * 3 * 3)
-
-// for (let i = 0; i < count * 3 * 3; i++) {
-//   positionsArray[i] = Math.random() - 0.5
-// }
-
-// const positionsAttr = new THREE.BufferAttribute(positionsArray, 3)
-// geometry.setAttribute('position', positionsAttr)
-
-
-const material = new THREE.MeshBasicMaterial({
-  color: 0x00ff00,
-  wireframe: true
-});
-
-
-
-// const mesh = new THREE.Mesh(geometry, material);
-
-const canvas = document.querySelector('.webgl');
+const canvas = document.querySelector('canvas.webgl');
 
 // const axisHelper = new THREE.AxesHelper(3)
 
 const renderer = new THREE.WebGLRenderer({
   canvas
 });
-
-
-// const group = new THREE.Group()
-const cube = new THREE.Mesh(
-  geometry,
-  material
-)
-
-// group.add(cube)
-
-// const cube2 = new THREE.Mesh(
-//   new THREE.BoxGeometry(1, 1, 1),
-//   new THREE.MeshBasicMaterial(material)
-// )
-
-// group.add(cube2)
-
-// const cube3 = new THREE.Mesh(
-//   new THREE.BoxGeometry(1, 1, 1),
-//   new THREE.MeshBasicMaterial(material)
-// )
-
-const clock = new THREE.Clock()
-
 // Cursor
 
 const cursor = {
   x: 0,
   y: 0
 }
+// ** Images
+const loadingManager = new THREE.LoadingManager()
+
+loadingManager.onStart = () => {
+  console.log('onStart')
+}
+
+loadingManager.onProgress = () => {
+  console.log('onProgress')
+}
+
+loadingManager.onError = () => {
+  console.log('onError')
+}
+
+// Textures
+
+const textureLoader = new THREE.TextureLoader(loadingManager)
+
+const colorTexture = textureLoader.load(color)
+const alphaTexture = textureLoader.load(alpha)
+const heightTexture = textureLoader.load(height)
+const normalTexture = textureLoader.load(normal)
+const ambientOcclusionTexture = textureLoader.load(ambientOcclusion)
+const metalnessTexture = textureLoader.load(metalness)
+const roughnessTexture = textureLoader.load(roughness)
+
+// colorTexture.repeat.x = 2
+// colorTexture.repeat.y = 3
+// colorTexture.wrapS - THREE.MirroredRepeatWrapping
+// colorTexture.wrapT - THREE.MirroredRepeatWrapping
+
+// colorTexture.offset.x = 0.5
+// colorTexture.offset.y = 0.5
+
+// colorTexture.rotation =  Math.PI / 4
+// colorTexture.center.x = 0.5
+// colorTexture.center.y = 0.5
+colorTexture.generateMipmaps = false
+colorTexture.minFilter = THREE.NearestFilter
+colorTexture.magFilter = THREE.NearestFilter
 
 
+const material = new THREE.MeshBasicMaterial({
+  map: colorTexture
+});
+
+const cube = new THREE.Mesh(
+  geometry,
+  material
+)
 // Orbit Controls
 
 const orbitControls = new OrbitControls(camera, canvas)
